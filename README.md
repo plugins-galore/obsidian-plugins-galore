@@ -12,7 +12,7 @@ Not every plugin is going to be in the [official plugin directory](https://obsid
 
 ### Adding a plugin
 
-Paste in the full name of a [GitHub](https://github.com) repo (e.g. `username/the-name-of-the-repo`) and then click "Install". Simple as that. After that, the plugin is installed like any other, and you can enable/disable it just like any other in the regular "Community Plugins" tab in the Obsidian Settings.
+Paste in the full name of a [GitHub](https://github.com) repo (e.g. `username/the-name-of-the-repo`) and then click "Install". Simple as that. After that, the plugin is installed like any other, and you can enable/disable/remove it just like any other in the regular "Community Plugins" tab in the Obsidian Settings.
 
 ### Updating plugins
 
@@ -20,10 +20,10 @@ To update plugins installed through Plugins Galore, click the "Check for updates
 
 ## Related Plugins
 
-See also [Obsidian42 - BRAT](https://github.com/TfTHacker/obsidian42-brat) which similarly allows sideloading apps, but is targeted more at beta-testers, whereas this plugin is meant as a way for plugin developers to easily distribute actual releases of their plugins if they don't want to be a part of the official plugin directory.
+See also [Obsidian42 - BRAT](https://github.com/TfTHacker/obsidian42-brat) which similarly allows sideloading plugins, but is targeted more at beta-testers, whereas this plugin is meant as a way for plugin developers to easily distribute actual releases of their plugins if they don't want to be a part of the official plugin directory.
 
 ## Future Features
 
 Tentative Roadmap:
-- Allow repositories from [Gitea](https://gitea.io) and [GitLab](https://gitlab.com)
+- Allow repositories from [Gitea](https://gitea.io) and [GitLab](https://gitlab.com) instances
 - Create a plugin browser to search unofficial plugin directories to find more plugins
