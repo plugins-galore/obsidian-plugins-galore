@@ -1,73 +1,29 @@
-## Obsidian Sample Plugin
+# Plugins Galore
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+This is an [Obsidian](https://obsidian.md/) plugin to allow easily sideloading other plugins.
 
-This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.
+## Why Sideload Plugins?
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+Not every plugin is going to be in the [official plugin directory](https://obsidian.md/plugins). If there's a plugin you want that isn't there, you would have to manually download the files and put them in the `.obsidian/plugins` directory under your vault. What a drag! Plugins Galore allows you to simply paste the full name of a repository and it will automatically install it for you. Since Obsidian presumably doesn't know how to check for updates for these plugins, Plugins Galore also checks for updates, but only when you ask it to.
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Changes the default font color to red using `styles.css`.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+**DISCLAIMER: It is not recommended to install a plugin made by someone you don't trust, so please make sure you understand the security risks of sideloading plugins before using this**
 
-### First time developing plugins?
+## How to Use
 
-Quick starting guide for new plugin devs:
+### Adding a plugin
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+Paste in the full name of a [GitHub](https://github.com) repo (e.g. `username/the-name-of-the-repo`) and then click "Install". Simple as that. After that, the plugin is installed like any other, and you can enable/disable it just like any other in the regular "Community Plugins" tab in the Obsidian Settings.
 
-### Releasing new releases
+### Updating plugins
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+To update plugins installed through Plugins Galore, click the "Check for updates" button, and then if there are any plugins that can be updated, you can decide which ones (if any) to update.
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+## Related Plugins
 
-### Adding your plugin to the community plugin list
+See also [Obsidian42 - BRAT](https://github.com/TfTHacker/obsidian42-brat) which similarly allows sideloading apps, but is targeted more at beta-testers, whereas this plugin is meant as a way for plugin developers to easily distribute actual releases of their plugins if they don't want to be a part of the official plugin directory.
 
-- Check https://github.com/obsidianmd/obsidian-releases/blob/master/plugin-review.md
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+## Future Features
 
-### How to use
-
-- Clone this repo.
-- `npm i` or `yarn` to install dependencies
-- `npm run dev` to start compilation in watch mode.
-
-### Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-### Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
-
-
-### API Documentation
-
-See https://github.com/obsidianmd/obsidian-api
+Tentative Roadmap:
+- Allow repositories from [Gitea](https://gitea.io) and [GitLab](https://gitlab.com)
+- Create a plugin browser to search unofficial plugin directories to find more plugins
