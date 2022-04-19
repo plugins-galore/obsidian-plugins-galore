@@ -1,55 +1,6 @@
 import { request, normalizePath } from 'obsidian';
 import GaloreErrorModal from './errorModal.ts';
-
-const siteTypes = {
-	github: {
-		getURL(domain, purpose, ...args) {
-			if (purpose === 'file-from-repo') {
-				const [repo, file] = args;
-				return `https://raw.githubusercontent.com/${repo}/HEAD/${file}`;
-			} else if (purpose === 'releases') {
-				const [repo] = args;
-				return `https://api.github.com/repos/${repo}/releases`
-			}
-		}
-	},
-	gitea: {
-		getURL(domain, purpose, ...args) {
-			if (purpose === 'file-from-repo') {
-				const [repo, file] = args;
-				return `https://${domain}/api/v1/repos/${repo}/raw/${file}`;
-			} else if (purpose === 'releases') {
-				const [repo] = args;
-				return `https://${domain}/api/v1/repos/${repo}/releases`;
-			}
-		}
-	}
-}
-
-const getFileFromRepo = async (site, repo, file) => request({
-	url: siteTypes[site.type].getURL(site.domain, 'file-from-repo', repo, file),
-});
-
-const getRelease = async (site, repo, options={}) => {
-	const {getAssets = false} = options;
-	let assets = null;
-	const rawRelease = JSON.parse(await request({
-		url: siteTypes[site.type].getURL(site.domain, 'releases', repo),
-	}))[0];
-	if (getAssets) {
-		assets = await Promise.all(rawRelease.assets.map(async asset => ({
-			name: asset.name,
-			content: await request({
-				url: asset.browser_download_url,
-			}),
-		})));
-	}
-	return {
-		repo,
-		version: rawRelease.tag_name,
-		assets,
-	}
-}
+import {getRelease, getAsset, getAssets} from './gitServerInterface.ts';
 
 const getPluginsDir = app => {
 	return normalizePath(app.vault.configDir + "/plugins") + "/";
