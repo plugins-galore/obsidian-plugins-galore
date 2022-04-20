@@ -1,5 +1,6 @@
 import { App, Modal, Setting, Notice } from 'obsidian';
-import { installFromRepo } from './utils.ts';
+import { parseRepoURL } from './gitServerInterface.ts';
+import { installPluginFromRepo } from './utils.ts';
 
 export default class GaloreAddModal extends Modal {
 
@@ -15,50 +16,19 @@ export default class GaloreAddModal extends Modal {
 
 		contentEl.createEl("h2", {text: "Plugins Galore: Add a Plugin"})
 
-		let siteDomainInput = null;
-
-		let repoFullName = "";
+		let repoURL = "";
 		let siteType = "github";
 
-		const siteDomainByType = {
-			github: "github.com",
-			gitea: "",
-			gitlab: "",
-		}
-
 		new Setting(contentEl)
-			.setName('Repo Full Name')
+			.setName('Repo URL')
 			.setDesc('')
 			.addText(text => text
 				.setPlaceholder("user/repo")
-				.setValue(repoFullName)
+				.setValue(repoURL)
 				.onChange(value => {
-					repoFullName = value;
+					repoURL = value;
 				})
 			)
-
-		new Setting(contentEl)
-			.setName('Git Host')
-			.setDesc('')
-			.addDropdown(dd => dd
-				.addOption("github", "GitHub")
-				.addOption("gitea", "Gitea")
-				// .addOption("gitlab", "GitLab") // we don't support GitLab yet.
-				.setValue(siteType)
-				.onChange(value => {
-					siteType = value;
-					siteDomainInput.setValue(siteDomainByType[siteType]);
-				})
-			)
-			.addText(text => {
-				siteDomainInput = text;
-				text
-					.setPlaceholder("example.com")
-					.setValue(siteDomainByType[siteType])
-					.onChange(value => {
-						siteDomainByType[siteType] = value;
-					})
-			})
 
 		new Setting(contentEl)
 			.setName('Install the plugin')
@@ -67,8 +37,10 @@ export default class GaloreAddModal extends Modal {
 				.setButtonText("Install")
 				.setCta()
 				.onClick(async ev => {
-					const plugin = await installFromRepo(this.app, {type: siteType, domain: siteDomainByType[siteType]}, repoFullName);
-					new Notice(`Installed ${plugin.name}.`);
+					const repo = await parseRepoURL(repoURL);
+					console.log('repo', repo);
+					const plugin = await installPluginFromRepo(this.app, repo);
+					new Notice(`Installed ${plugin.manifest.name}.`);
 					this.close();
 				})
 			)

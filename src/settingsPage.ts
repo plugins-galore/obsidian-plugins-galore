@@ -1,5 +1,5 @@
 import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
-import { installFromRepo, getGalorePlugins } from './utils.ts';
+import { installPluginFromRepo, getGalorePlugins } from './utils.ts';
 import GaloreUpdateModal from './updateModal.ts';
 import GaloreAddModal from './addModal.ts';
 
@@ -40,6 +40,7 @@ export default class GaloreSettingTab extends PluginSettingTab {
 				.setCta()
 				.onClick(async ev => {
 					const galorePlugins = await getGalorePlugins(this.app);
+					console.log('galorePlugins', galorePlugins);
 					const galorePluginsThatCanUpdate = galorePlugins.filter(x => x.canUpdate);
 					if (galorePluginsThatCanUpdate.length) {
 						new GaloreUpdateModal(this.app, galorePluginsThatCanUpdate).open();

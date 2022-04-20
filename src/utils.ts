@@ -1,6 +1,6 @@
 import { request, normalizePath } from 'obsidian';
 import GaloreErrorModal from './errorModal.ts';
-import {getRelease, getAsset, getAssets} from './gitServerInterface.ts';
+import { getRelease, getAsset, getAssets } from './gitServerInterface.ts';
 
 const getPluginsDir = app => {
 	return normalizePath(app.vault.configDir + "/plugins") + "/";
@@ -10,51 +10,66 @@ const getPluginPath = (app, pluginID) => {
 	return getPluginsDir(app) + pluginID + "/";
 }
 
-const formatPlugin = ({path, galore, manifest}) => {
-	const {site, repo, version} = galore;
-	const {id, name, author, description} = manifest;
-	return {
-		path,
-		galore,
-		manifest,
-		site,
-		repo,
-		version,
-		id,
-		name,
-		author,
-		description,
-	}
-}
-
-const installFromRepo = async (app, site, repo) => {
+const getRemotePluginMeta = async (repo) => {
 	try {
-		const manifest = JSON.parse(await getFileFromRepo(site, repo, 'manifest.json'));
-		const pluginID = manifest.id;
-		const pluginPath = getPluginPath(app, pluginID);
-		const release = await getRelease(site, repo, {getAssets: true});
-		const adapter = app.vault.adapter;
-		if (!(await adapter.exists(pluginPath))) {
-            await adapter.mkdir(pluginPath);
-        }
-		const galore = {
-			site,
-			repo,
-			version: release.version,
-		};
-		await adapter.write(
-			pluginPath + ".galore",
-			JSON.stringify(galore),
-		)
-		await Promise.all(release.assets.map(async asset => adapter.write(
-			pluginPath + asset.name,
-			asset.content,
-		)));
-		return formatPlugin({path: pluginPath, galore, manifest});
+		const release = await getRelease(repo);
+		return {repo, version: release.version};
 	} catch (error) {
 		console.error(error);
 		new GaloreErrorModal(app, error).open();
 	}
+}
+
+const getRemotePlugin = async (repo) => {
+	try {
+		const release = await getRelease(repo);
+		const galore = {repo, version: release.version};
+		const rawManifest = await getAsset(release, 'manifest.json');
+		console.log('rawManifest', rawManifest);
+		const manifest = JSON.parse(await getAsset(release, 'manifest.json'));
+		const assets = await getAssets(release);
+		return {
+			galore,
+			manifest,
+			assets,
+		};
+	} catch (error) {
+		console.error(error);
+		new GaloreErrorModal(app, error).open();
+	}
+}
+
+const getLocalPluginMeta = async (app, pluginID) => {
+	const path = getPluginPath(app, pluginID);
+	const adapter = app.vault.adapter;
+	return JSON.parse(await adapter.read(path + ".galore"));
+}
+
+const writePlugin = async (app, plugin) => {
+	try {
+		const path = getPluginPath(app, plugin.manifest.id);
+		const adapter = app.vault.adapter;
+		if (!(await adapter.exists(path))) {
+			await adapter.mkdir(path);
+		}
+		await adapter.write(
+			path + ".galore",
+			JSON.stringify(plugin.galore),
+		)
+		await Promise.all(plugin.assets.map(async asset => adapter.write(
+			path + asset.name,
+			asset.content,
+		)));
+	} catch (error) {
+		console.error(error);
+		new GaloreErrorModal(app, error).open();
+	}
+}
+
+const installPluginFromRepo = async (app, repo) => {
+	const plugin = await getRemotePlugin(repo);
+	await writePlugin(app, plugin);
+	return plugin;
 }
 
 const asyncFilter = async (array, func) => {
@@ -72,21 +87,16 @@ const getGalorePlugins = async (app) => {
 		const allPluginPaths = (await adapter.list(pluginsDir)).folders;
 		const galorePluginPaths = (await asyncFilter(allPluginPaths, async path => adapter.exists(path + "/.galore"))).map(p => p + "/");
 		const galorePlugins = await Promise.all(galorePluginPaths.map(async path => {
-			const manifest = JSON.parse(await adapter.read(path + "manifest.json"));
-			const galore = JSON.parse(await adapter.read(path + ".galore"));
-			const site = galore.site;
-			const repo = galore.repo;
-			const latestRelease = await getRelease(site, repo);
-			const remoteVersion = latestRelease.version;
-			const remoteManifest = JSON.parse(await getFileFromRepo(site, repo, 'manifest.json'));
-			const currentPlugin = formatPlugin({path, galore, manifest});
-			currentPlugin.remote = {
-				release: latestRelease,
-				manifest: remoteManifest,
-				version: remoteVersion,
+			const localManifest = JSON.parse(await adapter.read(path + "manifest.json"));
+			const localGalore = await getLocalPluginMeta(app, localManifest.id);
+			const remoteGalore = await getRemotePluginMeta(localGalore.repo);
+			return {
+				manifest: localManifest,
+				repo: localGalore.repo,
+				localVersion: localGalore.version,
+				remoteVersion: remoteGalore.version,
+				canUpdate: localGalore.version !== remoteGalore.version,
 			}
-			currentPlugin.canUpdate = currentPlugin.version !== currentPlugin.remote.version;
-			return currentPlugin
 		}));
 		return galorePlugins;
 	} catch (error) {
@@ -97,6 +107,6 @@ const getGalorePlugins = async (app) => {
 
 export {
 	getPluginsDir,
-	installFromRepo,
+	installPluginFromRepo,
 	getGalorePlugins,
 }
