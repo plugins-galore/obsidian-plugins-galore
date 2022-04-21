@@ -13,5 +13,5 @@ const cacheRequest = async (req) => {
 }
 
 export {
-	request: cacheRequest
+	cacheRequest as request,
 }
