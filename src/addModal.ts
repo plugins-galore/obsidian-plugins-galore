@@ -23,7 +23,7 @@ export default class GaloreAddModal extends Modal {
 			.setName('Repo URL')
 			.setDesc('')
 			.addText(text => text
-				.setPlaceholder("user/repo")
+				.setPlaceholder("https://github.com/{owner}/{plugin-repo}")
 				.setValue(repoURL)
 				.onChange(value => {
 					repoURL = value;
