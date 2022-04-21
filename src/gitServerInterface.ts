@@ -39,7 +39,6 @@ const parseRepoURL = async (url) => {
 }
 
 const getRelease = async (repo, options) => {
-	console.log('getting release of repo', repo);
 	const {type, domain, owner, name} = repo;
 	const {allowPrerelease = false} = options || {};
 	let release = null;

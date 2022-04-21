@@ -38,7 +38,6 @@ export default class GaloreAddModal extends Modal {
 				.setCta()
 				.onClick(async ev => {
 					const repo = await parseRepoURL(repoURL);
-					console.log('repo', repo);
 					const plugin = await installPluginFromRepo(this.app, repo);
 					new Notice(`Installed ${plugin.manifest.name}.`);
 					this.close();

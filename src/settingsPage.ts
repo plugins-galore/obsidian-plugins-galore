@@ -40,7 +40,6 @@ export default class GaloreSettingTab extends PluginSettingTab {
 				.setCta()
 				.onClick(async ev => {
 					const galorePlugins = await getGalorePlugins(this.app);
-					console.log('galorePlugins', galorePlugins);
 					const galorePluginsThatCanUpdate = galorePlugins.filter(x => x.canUpdate);
 					if (galorePluginsThatCanUpdate.length) {
 						new GaloreUpdateModal(this.app, galorePluginsThatCanUpdate).open();

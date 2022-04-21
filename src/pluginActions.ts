@@ -25,7 +25,6 @@ const getRemotePlugin = async (repo) => {
 		const release = await getRelease(repo);
 		const galore = {repo, version: release.version};
 		const rawManifest = await getAsset(release, 'manifest.json');
-		console.log('rawManifest', rawManifest);
 		const manifest = JSON.parse(await getAsset(release, 'manifest.json'));
 		const assets = await getAssets(release);
 		return {

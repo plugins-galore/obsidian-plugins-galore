@@ -6,7 +6,6 @@ export default class GaloreUpdateModal extends Modal {
 		super(app);
 		this.app = app;
 		this.galorePlugins = galorePlugins;
-		console.log(galorePlugins);
 	}
 
 	onOpen() {
