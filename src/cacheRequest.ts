@@ -1,8 +1,13 @@
-import { request } from 'obsidian';
+import { RequestUrlParam, request } from 'obsidian';
 
-const cache = [];
+type CachedRequest = {
+	req: string,
+	res: string,
+}
 
-const cacheRequest = async (req) => {
+const cache: Array<CachedRequest> = [];
+
+const cacheRequest = async (req: RequestUrlParam) => {
 	const filteredCache = cache.filter(item => item.req === JSON.stringify(req));
 	if (filteredCache.length) {
 		return filteredCache[0].res;

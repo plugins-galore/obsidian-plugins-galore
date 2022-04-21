@@ -1,10 +1,11 @@
+import { Repo, Release } from './types';
 import { request } from './cacheRequest';
 
-const countRegexInString = (str, re) => ((str || '').match(re) || []).length;
+const countRegexInString = (str: string, re: RegExp) => ((str || '').match(re) || []).length;
 
-const getKeyWithMax = obj => Object.keys(obj).reduce((a, b) => obj[a] >= obj[b] ? a : b);
+const getKeyWithMax = (obj: any) => Object.keys(obj).reduce((a: string | null, b: string) => obj[a] >= obj[b] ? a : b, null);
 
-const parseRepoURL = async (url) => {
+const parseRepoURL = async (url: string) => {
 	let urlObj = null;
 	try {
 		urlObj = new URL(url);
@@ -38,7 +39,7 @@ const parseRepoURL = async (url) => {
 	}
 }
 
-const getRelease = async (repo, options) => {
+const getRelease = async (repo: Repo, options?: any) => {
 	const {type, domain, owner, name} = repo;
 	const {allowPrerelease = false} = options || {};
 	let release = null;
@@ -46,10 +47,10 @@ const getRelease = async (repo, options) => {
 		const rawReleases = JSON.parse(await request({
 			url: `https://api.${domain}/repos/${owner}/${name}/releases`,
 		}));
-		const rawRelease = rawReleases.filter(x => !x.draft && (allowPrerelease || !x.prerelease)).sort(x => x.published_at)[0]
+		const rawRelease: any = rawReleases.filter((x: any) => !x.draft && (allowPrerelease || !x.prerelease)).sort((x: any) => x.published_at)[0]
 		release = {
 			version: rawRelease.tag_name,
-			assets: rawRelease.assets.map(asset => ({
+			assets: rawRelease.assets.map((asset: any) => ({
 				name: asset.name,
 				url: asset.browser_download_url,
 			})),
@@ -58,10 +59,10 @@ const getRelease = async (repo, options) => {
 		const rawReleases = JSON.parse(await request({
 			url: `https://${domain}/api/v1/repos/${owner}/${name}/releases`,
 		}));
-		const rawRelease = rawReleases.filter(x => !x.draft && (allowPrerelease || !x.prerelease)).sort(x => x.published_at)[0]
+		const rawRelease: any = rawReleases.filter((x: any) => !x.draft && (allowPrerelease || !x.prerelease)).sort((x: any) => x.published_at)[0]
 		release = {
 			version: rawRelease.tag_name,
-			assets: rawRelease.assets.map(asset => ({
+			assets: rawRelease.assets.map((asset: any) => ({
 				name: asset.name,
 				url: asset.browser_download_url,
 			})),
@@ -70,10 +71,10 @@ const getRelease = async (repo, options) => {
 		const rawReleases = JSON.parse(await request({
 			url: `https://${domain}/api/v4/projects/${owner}%2F${name}/releases`,
 		}));
-		const rawRelease = rawReleases.filter(x => allowPrerelease || !x.upcoming_release).sort(x => x.published_at)[0]
+		const rawRelease: any = rawReleases.filter((x: any) => allowPrerelease || !x.upcoming_release).sort((x: any) => x.published_at)[0]
 		release = {
 			version: rawRelease.tag_name,
-			assets: rawRelease.assets.links.map(asset => ({
+			assets: rawRelease.assets.links.map((asset: any) => ({
 				name: asset.name,
 				url: asset.direct_asset_url,
 			})),
@@ -82,7 +83,7 @@ const getRelease = async (repo, options) => {
 	return release;
 }
 
-const getAsset = async (release, name) => {
+const getAsset = async (release: Release, name: string) => {
 	const asset = release.assets.filter(asset => asset.name === name)[0];
 	if (!asset) {
 		return null;
@@ -92,7 +93,7 @@ const getAsset = async (release, name) => {
 	});
 }
 
-const getAssets = async (release, names) => {
+const getAssets = async (release: Release, names?: Array<string>) => {
 	const assets = names ? release.assets.filter(asset => names.includes(asset.name)) : release.assets;
 	return Promise.all(assets.map(async asset => ({name: asset.name, content: await request({url: asset.url})})));
 }

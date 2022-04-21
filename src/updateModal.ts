@@ -2,7 +2,9 @@ import { App, Modal, Setting, Notice } from 'obsidian';
 import { installPluginFromRepo } from './pluginActions';
 
 export default class GaloreUpdateModal extends Modal {
-	constructor(app: App, galorePlugins) {
+	galorePlugins?: any = null;
+
+	constructor(app: App, galorePlugins: any) {
 		super(app);
 		this.app = app;
 		this.galorePlugins = galorePlugins;
@@ -24,7 +26,7 @@ export default class GaloreUpdateModal extends Modal {
 				.setButtonText("Update")
 				.setCta()
 				.onClick(async ev => {
-					const pluginsToUpdate = this.galorePlugins.filter(plugin => plugin.toggle.getValue());
+					const pluginsToUpdate = this.galorePlugins.filter((plugin: any) => plugin.toggle.getValue());
 					for (const plugin of pluginsToUpdate) {
 						await installPluginFromRepo(this.app, plugin.repo);
 					}

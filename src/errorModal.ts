@@ -1,9 +1,11 @@
 import { App, Modal } from 'obsidian';
 
 export default class GaloreErrorModal extends Modal {
-	constructor(app: App, error) {
+	error?: Error | string = null;
+
+	constructor(app: App, error: Error | string) {
 		super(app);
-		// this.error = error;
+		this.error = error;
 	}
 
 	onOpen() {
