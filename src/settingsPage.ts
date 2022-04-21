@@ -1,13 +1,12 @@
-import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
+import { App, Plugin, Notice, PluginSettingTab, Setting } from 'obsidian';
 import { installPluginFromRepo, getGalorePlugins } from './pluginActions';
 import GaloreUpdateModal from './updateModal';
 import GaloreAddModal from './addModal';
-import Galore from '../main';
 
 export default class GaloreSettingTab extends PluginSettingTab {
-	plugin?: Galore = null;
+	plugin?: Plugin = null;
 
-	constructor(app: App, plugin: Galore) {
+	constructor(app: App, plugin: Plugin) {
 		super(app, plugin);
 		this.app = app;
 		this.plugin = plugin;

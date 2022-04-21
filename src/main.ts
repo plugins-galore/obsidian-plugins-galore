@@ -1,7 +1,7 @@
 import { Plugin } from 'obsidian';
-import { parseRepoURL } from 'src/gitServerInterface';
-import { getPluginsDir } from 'src/pluginActions';
-import GaloreSettingTab from 'src/settingsPage';
+import { parseRepoURL } from './gitServerInterface';
+import { getPluginsDir } from './pluginActions';
+import GaloreSettingTab from './settingsPage';
 
 // This is split out into it's own function as a workaround since otherwise
 // typescript yells at us that App doesn't have `plugins` property.
