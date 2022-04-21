@@ -1,4 +1,4 @@
-import { Repo, Release } from './types';
+import { Repo, Release } from '../types';
 import { request } from './cacheRequest';
 
 const countRegexInString = (str: string, re: RegExp) => ((str || '').match(re) || []).length;

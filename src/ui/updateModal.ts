@@ -1,5 +1,5 @@
 import { App, Modal, Setting, Notice } from 'obsidian';
-import { installPluginFromRepo } from './pluginActions';
+import { installPluginFromRepo } from '../util/pluginActions';
 
 export default class GaloreUpdateModal extends Modal {
 	galorePlugins?: any = null;

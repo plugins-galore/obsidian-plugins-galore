@@ -1,6 +1,6 @@
-import { Repo, Release, PluginForGalore } from './types';
+import { Repo, Release, PluginForGalore } from '../types';
 import { App, normalizePath } from 'obsidian';
-import GaloreErrorModal from './errorModal';
+import GaloreErrorModal from '../ui/errorModal';
 import { getRelease, getAsset, getAssets } from './gitServerInterface';
 
 const getPluginsDir = (app: App) => {
