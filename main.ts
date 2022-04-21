@@ -1,5 +1,6 @@
 import { Plugin } from 'obsidian';
-import { getPluginsDir } from 'src/utils.ts';
+import { parseRepoURL } from 'src/gitServerInterface.ts';
+import { getPluginsDir } from 'src/pluginActions.ts';
 import GaloreSettingTab from 'src/settingsPage.ts';
 
 export default class Galore extends Plugin {
@@ -10,13 +11,9 @@ export default class Galore extends Plugin {
 		const adapter = this.app.vault.adapter;
 		if (!(await adapter.exists(galoreFilePath))) {
 			const galoreManifest = this.app.plugins.manifests["plugins-galore"];
-			const site = {
-				type: "github",
-				domain: "github.com",
-			};
-			const repo = "dylanpizzo/obsidian-plugins-galore";
+			const repo = await parseRepoURL("https://github.com/dylanpizzo/obsidian-plugins-galore");
 			const version = galoreManifest.version;
-			adapter.write(galoreFilePath, JSON.stringify({site, repo, version}));
+			adapter.write(galoreFilePath, JSON.stringify({repo, version}));
 		}
 	}
 }

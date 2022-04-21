@@ -1,6 +1,7 @@
 import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
-import { installFromRepo, getGalorePlugins } from './utils.ts';
+import { installPluginFromRepo, getGalorePlugins } from './pluginActions.ts';
 import GaloreUpdateModal from './updateModal.ts';
+import GaloreAddModal from './addModal.ts';
 
 export default class GaloreSettingTab extends PluginSettingTab {
 
@@ -15,34 +16,19 @@ export default class GaloreSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Add a plugin from a Github repository'});
+		containerEl.createEl('h2', {text: 'Plugins Galore'});
 
 		let repoURL = "";
 		let repoInput = null;
 
 		new Setting(containerEl)
-			.setName('Add a Plugin')
-			.setDesc('Enter the `user/repo` of a plugin and then click to install')
-			.addText(text => {
-				repoInput = text;
-				text
-					.setPlaceholder("user/repo")
-					.setValue(repoURL)
-					.onChange(value => {
-						repoURL = value;
-					})
-			})
+			.setName('Add a plugin')
+			.setDesc('')
 			.addButton(button => button
-				.setButtonText("Install")
+				.setButtonText("Add a plugin")
 				.setCta()
 				.onClick(async ev => {
-					const plugin = await installFromRepo(this.app, {type: "github", domain: "github.com"}, repoURL);
-					console.log('plugin', plugin);
-					if (repoInput) {
-						repoURL = '';
-						repoInput.setValue(repoURL);
-					}
-					new Notice(`Installed ${plugin.name}.`);
+					new GaloreAddModal(this.app).open();
 				})
 			)
 

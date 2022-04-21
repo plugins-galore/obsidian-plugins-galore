@@ -1,5 +1,5 @@
 import { App, Modal, Setting, Notice } from 'obsidian';
-import { installFromRepo } from './utils.ts';
+import { installPluginFromRepo } from './pluginActions.ts';
 
 export default class GaloreUpdateModal extends Modal {
 	constructor(app: App, galorePlugins) {
@@ -26,7 +26,7 @@ export default class GaloreUpdateModal extends Modal {
 				.onClick(async ev => {
 					const pluginsToUpdate = this.galorePlugins.filter(plugin => plugin.toggle.getValue());
 					for (const plugin of pluginsToUpdate) {
-						await installFromRepo(this.app, {type: "github", domain: "github.com"}, plugin.repo);
+						await installPluginFromRepo(this.app, plugin.repo);
 					}
 					new Notice(`Updated ${pluginsToUpdate.length} plugins`);
 					this.close();
@@ -34,8 +34,8 @@ export default class GaloreUpdateModal extends Modal {
 			)
 		for (const plugin of this.galorePlugins) {
 			new Setting(contentEl)
-				.setName(plugin.name)
-				.setDesc(`Version: ${plugin.version} -> ${plugin.remote.version}`)
+				.setName(plugin.manifest.name)
+				.setDesc(`Version: ${plugin.localVersion} -> ${plugin.remoteVersion}`)
 				.addToggle(toggle => {
 					plugin.toggle = toggle;
 					toggle.setValue(true);
