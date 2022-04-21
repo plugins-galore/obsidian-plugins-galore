@@ -1,4 +1,4 @@
-import { request, normalizePath } from 'obsidian';
+import { normalizePath } from 'obsidian';
 import GaloreErrorModal from './errorModal.ts';
 import { getRelease, getAsset, getAssets } from './gitServerInterface.ts';
 

@@ -1,6 +1,6 @@
 import { App, Modal, Setting, Notice } from 'obsidian';
 import { parseRepoURL } from './gitServerInterface.ts';
-import { installPluginFromRepo } from './utils.ts';
+import { installPluginFromRepo } from './pluginActions.ts';
 
 export default class GaloreAddModal extends Modal {
 

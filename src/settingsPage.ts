@@ -1,5 +1,5 @@
 import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
-import { installPluginFromRepo, getGalorePlugins } from './utils.ts';
+import { installPluginFromRepo, getGalorePlugins } from './pluginActions.ts';
 import GaloreUpdateModal from './updateModal.ts';
 import GaloreAddModal from './addModal.ts';
 

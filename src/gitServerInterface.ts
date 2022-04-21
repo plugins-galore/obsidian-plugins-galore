@@ -1,4 +1,4 @@
-import { request } from 'obsidian';
+import { request } from './cacheRequest.ts';
 
 const countRegexInString = (str, re) => ((str || '').match(re) || []).length;
 
