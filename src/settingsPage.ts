@@ -1,7 +1,7 @@
 import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
-import { installPluginFromRepo, getGalorePlugins } from './pluginActions.ts';
-import GaloreUpdateModal from './updateModal.ts';
-import GaloreAddModal from './addModal.ts';
+import { installPluginFromRepo, getGalorePlugins } from './pluginActions';
+import GaloreUpdateModal from './updateModal';
+import GaloreAddModal from './addModal';
 
 export default class GaloreSettingTab extends PluginSettingTab {
 

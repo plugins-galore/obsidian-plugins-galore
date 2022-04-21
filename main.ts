@@ -1,7 +1,7 @@
 import { Plugin } from 'obsidian';
-import { parseRepoURL } from 'src/gitServerInterface.ts';
-import { getPluginsDir } from 'src/pluginActions.ts';
-import GaloreSettingTab from 'src/settingsPage.ts';
+import { parseRepoURL } from 'src/gitServerInterface';
+import { getPluginsDir } from 'src/pluginActions';
+import GaloreSettingTab from 'src/settingsPage';
 
 export default class Galore extends Plugin {
 	async onload() {

@@ -1,4 +1,4 @@
-import { request } from './cacheRequest.ts';
+import { request } from './cacheRequest';
 
 const countRegexInString = (str, re) => ((str || '').match(re) || []).length;
 

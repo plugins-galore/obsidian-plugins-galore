@@ -1,6 +1,6 @@
 import { normalizePath } from 'obsidian';
-import GaloreErrorModal from './errorModal.ts';
-import { getRelease, getAsset, getAssets } from './gitServerInterface.ts';
+import GaloreErrorModal from './errorModal';
+import { getRelease, getAsset, getAssets } from './gitServerInterface';
 
 const getPluginsDir = app => {
 	return normalizePath(app.vault.configDir + "/plugins") + "/";
