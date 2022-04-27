@@ -32,4 +32,4 @@ Tentative Roadmap:
 
 ## How it works (under the hood)
 
-This section is mostly irrelevant, even for developers, but for those curious, we store a `.galore` file in any plugin directory of a plugin installed through Plugins Galore. This `.galore` file contains relevant information about where the repo is stored, and what release tag the currently installed version of the plugin is, so we can compare to look for updates.
+We check for releases on the git server, almost identically to how Obsidian handles it themselves. I'm too lazy to write out more info right now, but if you have a question or need help, feel free to [make an issue](https://github.com/dylanpizzo/obsidian-plugins-galore/issues) letting me know to update this section of the readme. 
