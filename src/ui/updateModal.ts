@@ -1,12 +1,15 @@
 import { App, Modal, Setting, Notice } from 'obsidian';
+import Galore from '../main';
 import { installPluginFromRepo } from '../util/pluginActions';
 
 export default class GaloreUpdateModal extends Modal {
+	plugin: Galore;
 	galorePlugins?: any = null;
 
-	constructor(app: App, galorePlugins: any) {
+	constructor(plugin: Galore, galorePlugins: any) {
 		super(app);
-		this.app = app;
+		this.plugin = plugin;
+		this.app = plugin.app;
 		this.galorePlugins = galorePlugins;
 	}
 
@@ -28,7 +31,7 @@ export default class GaloreUpdateModal extends Modal {
 				.onClick(async ev => {
 					const pluginsToUpdate = this.galorePlugins.filter((plugin: any) => plugin.toggle.getValue());
 					for (const plugin of pluginsToUpdate) {
-						await installPluginFromRepo(this.app, plugin.repo);
+						await installPluginFromRepo(this.plugin, plugin.repo);
 					}
 					new Notice(`Updated ${pluginsToUpdate.length} plugins`);
 					this.close();

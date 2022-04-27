@@ -1,15 +1,16 @@
 import { App, Plugin, Notice, PluginSettingTab, Setting } from 'obsidian';
-import { installPluginFromRepo, getGalorePlugins } from '../util/pluginActions';
+import Galore from '../main';
+import { getGalorePlugins } from '../util/pluginActions';
 import GaloreUpdateModal from './updateModal';
 import GaloreAddModal from './addModal';
 
 export default class GaloreSettingTab extends PluginSettingTab {
-	plugin?: Plugin = null;
-
-	constructor(app: App, plugin: Plugin) {
+	plugin: Galore;
+	
+	constructor(plugin: Galore) {
 		super(app, plugin);
-		this.app = app;
 		this.plugin = plugin;
+		this.app = plugin.app;
 	}
 
 	display(): void {
@@ -29,7 +30,7 @@ export default class GaloreSettingTab extends PluginSettingTab {
 				.setButtonText("Add a plugin")
 				.setCta()
 				.onClick(async ev => {
-					new GaloreAddModal(this.app).open();
+					new GaloreAddModal(this.plugin).open();
 				})
 			)
 
@@ -40,10 +41,10 @@ export default class GaloreSettingTab extends PluginSettingTab {
 				.setButtonText("Check for updates")
 				.setCta()
 				.onClick(async ev => {
-					const galorePlugins = await getGalorePlugins(this.app);
+					const galorePlugins = await getGalorePlugins(this.plugin);
 					const galorePluginsThatCanUpdate = galorePlugins.filter(x => x.canUpdate);
 					if (galorePluginsThatCanUpdate.length) {
-						new GaloreUpdateModal(this.app, galorePluginsThatCanUpdate).open();
+						new GaloreUpdateModal(this.plugin, galorePluginsThatCanUpdate).open();
 					} else {
 						new Notice('No plugins updates found.');
 					}

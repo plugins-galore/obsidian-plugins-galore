@@ -3,23 +3,27 @@ import { parseRepoURL } from './util/gitServerInterface';
 import { getPluginsDir } from './util/pluginActions';
 import GaloreSettingTab from './ui/settingsPage';
 
-// This is split out into it's own function as a workaround since otherwise
-// typescript yells at us that App doesn't have `plugins` property.
-const getExistingPluginManifest = (app: any, name: string) => {
-	return app.plugins.manifests[name];
-}
-
 export default class Galore extends Plugin {
-	async onload() {
-		this.addSettingTab(new GaloreSettingTab(this.app, this));
+	galoreData: any;
 
-		const galoreFilePath = getPluginsDir(this.app) + "/plugins-galore/.galore";
-		const adapter = this.app.vault.adapter;
-		if (!(await adapter.exists(galoreFilePath))) {
-			const galoreManifest = getExistingPluginManifest(this.app, "plugins-galore");
-			const repo = await parseRepoURL("https://github.com/dylanpizzo/obsidian-plugins-galore");
-			const version = galoreManifest.version;
-			adapter.write(galoreFilePath, JSON.stringify({repo, version}));
-		}
+	async onload() {
+		await this.loadGaloreData();
+
+		this.addSettingTab(new GaloreSettingTab(this));
+	}
+
+	async loadGaloreData() {
+		this.galoreData = Object.assign({}, {
+			plugins: {
+				"plugins-galore": {
+					repo: await parseRepoURL("https://github.com/dylanpizzo/obsidian-plugins-galore"),
+					version: this.manifest.version,
+				}
+			}
+		}, await this.loadData());
+	}
+
+	async saveGaloreData() {
+		await this.saveData(this.galoreData);
 	}
 }

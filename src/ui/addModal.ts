@@ -1,12 +1,15 @@
 import { App, Modal, Setting, Notice } from 'obsidian';
+import Galore from '../main';
 import { parseRepoURL } from '../util/gitServerInterface';
 import { installPluginFromRepo } from '../util/pluginActions';
 
 export default class GaloreAddModal extends Modal {
+	plugin: Galore;
 
-	constructor(app: App) {
+	constructor(plugin: Galore) {
 		super(app);
-		this.app = app;
+		this.plugin = plugin;
+		this.app = plugin.app;
 	}
 
 	onOpen(): void {
@@ -38,7 +41,7 @@ export default class GaloreAddModal extends Modal {
 				.setCta()
 				.onClick(async ev => {
 					const repo = await parseRepoURL(repoURL);
-					const plugin = await installPluginFromRepo(this.app, repo);
+					const plugin = await installPluginFromRepo(this.plugin, repo);
 					new Notice(`Installed ${plugin.manifest.name}.`);
 					this.close();
 				})
