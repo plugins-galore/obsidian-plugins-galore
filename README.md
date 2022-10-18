@@ -12,7 +12,7 @@ Not every plugin is going to be in the [official plugin directory](https://obsid
 
 ### Adding a plugin
 
-Paste in the url of a plugin repo (e.g. `https://github.com/dylanpizzo/obsidian-plugins-galore`) and then click "Install". Simple as that. After that, the plugin is installed like any other, and you can enable/disable/remove it just like any other in the regular "Community Plugins" tab in the Obsidian Settings. The repo can be installed from [GitHub](https://github.com/) or any [GitLab](https://gitlab.com/) (untested) or [Gitea](https://gitea.io/) instance.
+Paste in the url of a plugin repo (e.g. `https://github.com/plugins-galore/obsidian-plugins-galore`) and then click "Install". Simple as that. After that, the plugin is installed like any other, and you can enable/disable/remove it just like any other in the regular "Community Plugins" tab in the Obsidian Settings. The repo can be installed from [GitHub](https://github.com/) or any [GitLab](https://gitlab.com/) (untested) or [Gitea](https://gitea.io/) instance.
 
 ### Updating plugins
 
@@ -32,4 +32,4 @@ Tentative Roadmap:
 
 ## How it works (under the hood)
 
-We check for releases on the git server, almost identically to how Obsidian handles it themselves. I'm too lazy to write out more info right now, but if you have a question or need help, feel free to [make an issue](https://github.com/dylanpizzo/obsidian-plugins-galore/issues) letting me know to update this section of the readme. 
+We check for releases on the git server, almost identically to how Obsidian handles it themselves. I'm too lazy to write out more info right now, but if you have a question or need help, feel free to [make an issue](https://github.com/plugins-galore/obsidian-plugins-galore/issues) letting me know to update this section of the readme. 
