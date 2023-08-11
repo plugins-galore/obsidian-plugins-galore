@@ -83,7 +83,20 @@ const getGalorePlugins = async (pluginsGalore: Galore) => {
 		const adapter = app.vault.adapter;
 		const pluginsDir = getPluginsDir(app);
 		const galorePluginPaths = Object.keys(pluginsGalore.galoreData.plugins).map((pluginID: string) => pluginsDir + "/" + pluginID + "/");
-		const galorePlugins = await Promise.all(galorePluginPaths.map(async path => {
+
+		const existingGalorePluginPaths = await asyncFilter(galorePluginPaths, async (path: string) => {
+			return await adapter.exists(normalizePath(path));
+		});
+
+		const missingGalorePluginPaths = await asyncFilter(galorePluginPaths, async (path: string) => {
+			return !(await adapter.exists(normalizePath(path)));
+		});
+
+		missingGalorePluginPaths.forEach(async (path: string) => {
+			await moveToHistory(pluginsGalore, path);
+		});
+
+		const galorePlugins = await Promise.all(existingGalorePluginPaths.map(async (path: string) => {
 			const localManifest = JSON.parse(await adapter.read(path + "manifest.json"));
 			const localGalore = getLocalPluginMeta(pluginsGalore, localManifest.id);
 			const remoteGalore = await getRemotePluginMeta(localGalore.repo);
@@ -102,8 +115,41 @@ const getGalorePlugins = async (pluginsGalore: Galore) => {
 	}
 }
 
+const moveToHistory = async (pluginsGalore: Galore, path: String) => {
+	// Isolate last part of plugin path
+	const folderName = path.split("/").filter(el => {
+		return el.trim().length > 0;
+	}).pop();
+
+	// Add plugin data to history
+	let historyDate = new Date();
+	const offset = historyDate.getTimezoneOffset();
+	historyDate = new Date(historyDate.getTime() - (offset*60*1000));
+
+	const pluginData = pluginsGalore.galoreData.plugins[folderName];
+	pluginData.timestamp = historyDate.toISOString();
+	
+	pluginsGalore.galoreData.history.push({ [folderName]: pluginData });
+	delete pluginsGalore.galoreData.plugins[folderName];
+	
+	// Persist changes
+	await pluginsGalore.saveGaloreData();
+}
+
+const clearHistory = async (pluginsGalore: Galore) => {
+	pluginsGalore.galoreData.history = [];
+	await pluginsGalore.saveGaloreData();
+}
+
+const removeFromHistory = async (pluginsGalore: Galore, idx: number) => {
+	pluginsGalore.galoreData.history.splice(idx, 1);
+	await pluginsGalore.saveGaloreData();
+}
+
 export {
 	getPluginsDir,
 	installPluginFromRepo,
 	getGalorePlugins,
+	clearHistory,
+	removeFromHistory
 }
