@@ -19,7 +19,8 @@ export default class Galore extends Plugin {
 					repo: await parseRepoURL("https://github.com/dylanpizzo/obsidian-plugins-galore"),
 					version: this.manifest.version,
 				}
-			}
+			},
+			history: []
 		}, await this.loadData());
 	}
 
